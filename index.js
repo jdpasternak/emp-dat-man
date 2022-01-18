@@ -1,6 +1,6 @@
 const inquirer = require("inquirer");
 const db = require("./db/connection");
-const { selectAllFromDepartment } = require("./db/queries");
+const { selectAllFromDepartment, selectAllFromRole } = require("./db/queries");
 
 // const sql = `
 // SELECT
@@ -53,6 +53,10 @@ const start = () =>
             .then((data) => console.table(data))
             .then(() => start());
           break;
+        case "View all roles":
+          selectAllFromRole()
+            .then((data) => console.table(data))
+            .then(() => start());
         default:
           console.log("Hello!");
       }

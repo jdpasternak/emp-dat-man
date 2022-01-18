@@ -1,5 +1,6 @@
 const inquirer = require("inquirer");
 const db = require("./db/connection");
+const { selectAllFromDepartment } = require("./db/queries");
 
 // const sql = `
 // SELECT
@@ -21,30 +22,43 @@ const db = require("./db/connection");
 //   })
 //   .then(() => db.end());
 
-inquirer
-  .prompt({
-    name: "choice",
-    type: "list",
-    message: "What would you like to do?",
-    choices: [
-      "View all departments",
-      "View all roles",
-      "View all employees",
-      "Add a department",
-      "Add a role",
-      "Add an employee",
-      "Update an employee role",
-      "Quit",
-    ],
-    validate: (input) => {
-      if (!input) {
-        console.log("Please select an option.");
-        return false;
+const start = () =>
+  inquirer
+    .prompt({
+      name: "choice",
+      type: "list",
+      message: "What would you like to do?",
+      choices: [
+        "View all departments",
+        "View all roles",
+        "View all employees",
+        "Add a department",
+        "Add a role",
+        "Add an employee",
+        "Update an employee role",
+        "Quit",
+      ],
+      validate: (input) => {
+        if (!input) {
+          console.log("Please select an option.");
+          return false;
+        }
+        return true;
+      },
+    })
+    .then(({ choice }) => {
+      switch (choice) {
+        case "View all departments":
+          selectAllFromDepartment()
+            .then((data) => console.table(data))
+            .then(() => start());
+          break;
+        default:
+          console.log("Hello!");
       }
-      return true;
-    },
-  })
-  .then(({ choice }) => console.log(choice))
-  .catch((err) => {
-    console.log(err);
-  });
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+
+start();

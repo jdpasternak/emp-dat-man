@@ -5,6 +5,7 @@ const {
   selectAllFromRole,
   selectAllFromEmployee,
   insertIntoDepartment,
+  insertIntoRole,
 } = require("./db/queries");
 
 // const sql = `
@@ -42,49 +43,48 @@ const getDepartmentName = () =>
   });
 
 const getRoleDetails = () => {
-  inquirer.prompt([
-    {
-      name: "title",
-      message: "Role title:",
-      type: "text",
-      validate: (input) => {
-        if (!input) {
-          console.log("Please enter a role title.");
-          return false;
-        }
-        return true;
+  selectAllFromDepartment().then((data) => {
+    inquirer.prompt([
+      {
+        name: "title",
+        message: "Role title:",
+        type: "text",
+        validate: (input) => {
+          if (!input) {
+            console.log("Please enter a role title.");
+            return false;
+          }
+          return true;
+        },
       },
-    },
-    {
-      name: "salary",
-      message: "Salary:",
-      type: "number",
-      validate: (input) => {
-        if (!input) {
-          console.log("Please enter a salary.");
-          return false;
-        } else if (input < 0) {
-          console.log("Please enter a positive number.");
-          return false;
-        }
-        return true;
+      {
+        name: "salary",
+        message: "Salary:",
+        type: "number",
+        validate: (input) => {
+          if (!input) {
+            console.log("Please enter a salary.");
+            return false;
+          } else if (input < 0) {
+            console.log("Please enter a positive number.");
+            return false;
+          }
+          return true;
+        },
       },
-    },
-    {
-      name: "department",
-      message: "Department",
-      type: "list",
-      choices: selectAllFromDepartment().then(
-        (data) =>
-          data
-            .map((dept) => Object.entries(dept))
-            .map((ent) => ent.map((e) => e[1]))
-            .map((e) => {
-              return { name: e[1], value: e[0] };
-            }).data
-      ),
-    },
-  ]);
+      {
+        name: "department",
+        message: "Department",
+        type: "list",
+        choices: data
+          .map((dept) => Object.entries(dept))
+          .map((ent) => ent.map((e) => e[1]))
+          .map((e) => {
+            return { name: e[1], value: e[0] };
+          }),
+      },
+    ]);
+  });
 };
 
 const start = () =>
@@ -122,17 +122,23 @@ const start = () =>
           selectAllFromRole()
             .then((data) => console.table(data))
             .then(() => start());
+          break;
         case "View all employees":
           selectAllFromEmployee()
             .then((data) => console.table(data))
-            .then(start());
+            .then(() => start());
+          break;
         case "Add a department":
           getDepartmentName()
             .then(({ name }) => insertIntoDepartment(name))
             .then(() => start());
           break;
         case "Add a role":
-          getRoleDetails();
+          getRoleDetails()
+            .then(({ title, salary, department }) =>
+              insertIntoRole([title, salary, department])
+            )
+            .then(() => start());
           break;
         default:
           console.log("Hello!");

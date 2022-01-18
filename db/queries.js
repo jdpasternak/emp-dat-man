@@ -6,7 +6,7 @@ const selectAllFromDepartment = () => {
     .promise()
     .query(sql)
     .then(([rows]) => rows)
-    .catch((err) => console.log(err));
+    .catch((err) => err);
 };
 
 const selectAllFromRole = () => {
@@ -57,14 +57,12 @@ const insertIntoRole = (params) => {
     .catch((err) => err);
 };
 
-// const departments = selectAllFromDepartment().then((data) =>
-//   data
-//     .map((dept) => Object.entries(dept))
-//     .map((ent) => ent.map((e) => e[1]))
-//     .map((e) => {
-//       return { name: e[1], value: e[0] };
-//     })
-// );
+// const departments = getDepartmentsList()
+//   .map((dept) => Object.entries(dept))
+//   .map((ent) => ent.map((e) => e[1]))
+//   .map((e) => {
+//     return { name: e[1], value: e[0] };
+//   });
 
 module.exports = {
   selectAllFromDepartment,

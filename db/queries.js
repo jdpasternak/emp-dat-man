@@ -47,9 +47,29 @@ const insertIntoDepartment = (params) => {
     .catch((err) => err);
 };
 
+const insertIntoRole = (params) => {
+  sql = `INSERT INTO role (title, salary, department) VALUES (?,?,?)`;
+
+  return db
+    .promise()
+    .query(sql, params)
+    .then((result) => result)
+    .catch((err) => err);
+};
+
+// const departments = selectAllFromDepartment().then((data) =>
+//   data
+//     .map((dept) => Object.entries(dept))
+//     .map((ent) => ent.map((e) => e[1]))
+//     .map((e) => {
+//       return { name: e[1], value: e[0] };
+//     })
+// );
+
 module.exports = {
   selectAllFromDepartment,
   selectAllFromRole,
   selectAllFromEmployee,
   insertIntoDepartment,
+  insertIntoRole,
 };

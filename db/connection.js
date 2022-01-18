@@ -1,8 +1,10 @@
-const db = require("mysql2");
+const mysql = require("mysql2");
+const { username, password } = require("./creds");
 
-db.createConnection({
+db = mysql.createConnection({
   host: "localhost",
-  user: "root",
+  user: username,
+  password: password,
   database: "company",
 });
 

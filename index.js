@@ -4,6 +4,7 @@ const {
   selectAllFromDepartment,
   selectAllFromRole,
   selectAllFromEmployee,
+  insertIntoDepartment,
 } = require("./db/queries");
 
 // const sql = `
@@ -25,6 +26,20 @@ const {
 //     console.log(err);
 //   })
 //   .then(() => db.end());
+
+const getDepartmentName = () =>
+  inquirer.prompt({
+    name: "name",
+    message: "Department name:",
+    type: "text",
+    validate: (input) => {
+      if (!input) {
+        console.log("Please enter a department name.");
+        return false;
+      }
+      return true;
+    },
+  });
 
 const start = () =>
   inquirer
@@ -65,6 +80,11 @@ const start = () =>
           selectAllFromEmployee()
             .then((data) => console.table(data))
             .then(start());
+        case "Add a department":
+          getDepartmentName()
+            .then(({ name }) => insertIntoDepartment(name))
+            .then(() => start());
+          break;
         default:
           console.log("Hello!");
       }

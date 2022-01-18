@@ -37,8 +37,19 @@ const selectAllFromEmployee = () => {
     .catch((err) => err);
 };
 
+const insertIntoDepartment = (params) => {
+  sql = `INSERT INTO department (name) VALUES (?)`;
+
+  return db
+    .promise()
+    .query(sql, params)
+    .then((result) => result)
+    .catch((err) => err);
+};
+
 module.exports = {
   selectAllFromDepartment,
   selectAllFromRole,
   selectAllFromEmployee,
+  insertIntoDepartment,
 };
